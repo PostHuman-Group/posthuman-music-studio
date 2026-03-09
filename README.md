@@ -1,19 +1,23 @@
 # PostHuman Music: Studio
 
-PostHuman Music: Studio is an AI-native superagent tool designed to generate audio and visual assets for live music radio streams. Developed specifically for the PostHuman YouTube channel, it automates composition, sample generation, and streaming schedules.
+PostHuman Music: Studio is an AI superagent music production tool that:
+- generates audio, image, and video assets for 24/7 live music radio streams;
+- manages and schedules 24/7 livestreams.
+
+PostHuman Music: Studio is being developed specifically for the PostHuman Music channel on YouTube.
 
 ## Core Features
 
-- **Sample Generator**: Text-to-audio engine for creating synths, loops, and drums.
-- **Stream Engine**: 24/7 AI-composed music generation with real-time mastering.
-- **Visualizer**: Audio-reactive visuals based on the PostHuman design system.
-- **Studio Bridge**: Automated scheduling and deployment to YouTube, TikTok, and Instagram.
+- **Sample Generator**: Text-to-audio sample geneator for creating synths, loops, FX, pads, drums, and more.
+- **Stream Engine**: 24/7 AI-composed music generation in real-time, with mastering built-in.
+- **Visualiser**: Audio-reactive visuals based on the PostHuman design system.
+- **Studio Bridge**: Automated scheduling and livestream management for YouTube, TikTok, and Instagram. More platforms are coming later.
 
 ## Tech Stack
 
 - **Frontend**: React 19, TypeScript, Vite, Framer Motion.
-- **AI**: Firebase Genkit, Google AI (Gemini).
-- **Database**: Neon (Serverless Postgres) with Drizzle ORM.
+- **AI**: Genkit, Google AI (Gemini).
+- **Database**: Neon with Drizzle ORM.
 - **Hosting**: Netlify + Netlify Functions.
 
 ## Getting Started
@@ -24,4 +28,3 @@ PostHuman Music: Studio is an AI-native superagent tool designed to generate aud
 4. Run the development server: `npm run dev`.
 
 ---
-*Manufactured by PostHuman Group.*
