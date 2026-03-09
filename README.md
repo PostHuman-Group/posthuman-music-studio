@@ -1,2 +1,2 @@
-# PostHuman Music Studio
-PostHuman's music studio is a custom built AI-native music studio that helps with producing music for PostHuman brands.
+# PostHuman Music: Studio
+PostHuman Music: Studio is a custom built AI-native music studio for PostHuman Music that produces music for 24/7 music radio.
