@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Image as ImageIcon, Sparkles, Loader2, Download, LayoutGrid, List } from 'lucide-react';
+import { Image as ImageIcon, Video, Sparkles, Loader2, Download, LayoutGrid, List } from 'lucide-react';
 
-interface Asset {
+export interface Asset {
     id: string;
     type: 'image' | 'video';
     prompt: string;
@@ -11,9 +11,14 @@ interface Asset {
     createdAt: string;
 }
 
-export const AssetStudio: React.FC = () => {
+interface AssetStudioProps {
+    onSelectAsset?: (asset: Asset) => void;
+}
+
+export const AssetStudio: React.FC<AssetStudioProps> = ({ onSelectAsset }) => {
     const [assets, setAssets] = useState<Asset[]>([]);
     const [theme, setTheme] = useState('');
+    const [generationType, setGenerationType] = useState<'image' | 'video'>('image');
     const [isGenerating, setIsGenerating] = useState(false);
     const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
 
@@ -26,9 +31,11 @@ export const AssetStudio: React.FC = () => {
 
             const newAsset: Asset = {
                 id: Math.random().toString(36).substr(2, 9),
-                type: 'image',
+                type: generationType,
                 prompt: theme,
-                url: `https://picsum.photos/seed/${Math.random()}/1920/1080`,
+                url: generationType === 'image'
+                    ? `https://picsum.photos/seed/${Math.random()}/1920/1080`
+                    : `https://assets.mixkit.co/videos/preview/mixkit-cyberpunk-city-at-night-with-bright-neon-lights-44534-preview.mp4`,
                 status: 'ready',
                 createdAt: new Date().toISOString(),
             };
@@ -56,36 +63,69 @@ export const AssetStudio: React.FC = () => {
                         background: 'linear-gradient(135deg, #bf00ff, #00deff)',
                         borderRadius: '10px'
                     }}>
-                        <ImageIcon size={20} color="white" />
+                        {generationType === 'image' ? <ImageIcon size={20} color="white" /> : <Video size={20} color="white" />}
                     </div>
                     <h2 style={{ fontSize: '1.25rem', fontWeight: 600, color: '#00deff' }}>Asset Studio</h2>
                 </div>
 
-                <div style={{ display: 'flex', background: 'rgba(5, 5, 16, 0.5)', padding: '4px', borderRadius: '8px' }}>
-                    <button
-                        onClick={() => setViewMode('grid')}
-                        style={{
-                            padding: '6px',
-                            borderRadius: '6px',
-                            background: viewMode === 'grid' ? 'rgba(0, 222, 255, 0.2)' : 'transparent',
-                            border: 'none',
-                            cursor: 'pointer'
-                        }}
-                    >
-                        <LayoutGrid size={18} color={viewMode === 'grid' ? '#00deff' : '#82a8b0'} />
-                    </button>
-                    <button
-                        onClick={() => setViewMode('list')}
-                        style={{
-                            padding: '6px',
-                            borderRadius: '6px',
-                            background: viewMode === 'list' ? 'rgba(0, 222, 255, 0.2)' : 'transparent',
-                            border: 'none',
-                            cursor: 'pointer'
-                        }}
-                    >
-                        <List size={18} color={viewMode === 'list' ? '#00deff' : '#82a8b0'} />
-                    </button>
+                <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+                    <div style={{ display: 'flex', background: 'rgba(5, 5, 16, 0.5)', padding: '4px', borderRadius: '8px' }}>
+                        <button
+                            onClick={() => setGenerationType('image')}
+                            style={{
+                                padding: '6px 12px',
+                                borderRadius: '6px',
+                                background: generationType === 'image' ? 'rgba(0, 222, 255, 0.2)' : 'transparent',
+                                border: 'none',
+                                cursor: 'pointer',
+                                color: generationType === 'image' ? '#00deff' : '#82a8b0',
+                                fontSize: '0.875rem'
+                            }}
+                        >
+                            Images
+                        </button>
+                        <button
+                            onClick={() => setGenerationType('video')}
+                            style={{
+                                padding: '6px 12px',
+                                borderRadius: '6px',
+                                background: generationType === 'video' ? 'rgba(0, 222, 255, 0.2)' : 'transparent',
+                                border: 'none',
+                                cursor: 'pointer',
+                                color: generationType === 'video' ? '#00deff' : '#82a8b0',
+                                fontSize: '0.875rem'
+                            }}
+                        >
+                            Video
+                        </button>
+                    </div>
+
+                    <div style={{ display: 'flex', background: 'rgba(5, 5, 16, 0.5)', padding: '4px', borderRadius: '8px' }}>
+                        <button
+                            onClick={() => setViewMode('grid')}
+                            style={{
+                                padding: '6px',
+                                borderRadius: '6px',
+                                background: viewMode === 'grid' ? 'rgba(0, 222, 255, 0.2)' : 'transparent',
+                                border: 'none',
+                                cursor: 'pointer'
+                            }}
+                        >
+                            <LayoutGrid size={18} color={viewMode === 'grid' ? '#00deff' : '#82a8b0'} />
+                        </button>
+                        <button
+                            onClick={() => setViewMode('list')}
+                            style={{
+                                padding: '6px',
+                                borderRadius: '6px',
+                                background: viewMode === 'list' ? 'rgba(0, 222, 255, 0.2)' : 'transparent',
+                                border: 'none',
+                                cursor: 'pointer'
+                            }}
+                        >
+                            <List size={18} color={viewMode === 'list' ? '#00deff' : '#82a8b0'} />
+                        </button>
+                    </div>
                 </div>
             </header>
 
@@ -94,7 +134,7 @@ export const AssetStudio: React.FC = () => {
                     type="text"
                     value={theme}
                     onChange={(e) => setTheme(e.target.value)}
-                    placeholder="Describe the visual theme (e.g., Cyberpunk Tokyo Pulse)..."
+                    placeholder={`Describe the ${generationType} theme (e.g., Cyberpunk Tokyo Pulse)...`}
                     style={{
                         flex: 1,
                         background: 'rgba(5, 5, 16, 0.5)',
@@ -161,20 +201,33 @@ export const AssetStudio: React.FC = () => {
                                     initial={{ opacity: 0, y: 20 }}
                                     animate={{ opacity: 1, y: 0 }}
                                     exit={{ opacity: 0, scale: 0.95 }}
+                                    onClick={() => onSelectAsset?.(asset)}
                                     style={{
                                         background: 'rgba(5, 5, 16, 0.3)',
                                         borderRadius: '16px',
                                         overflow: 'hidden',
                                         border: '1px solid rgba(255, 255, 255, 0.05)',
-                                        position: 'relative'
+                                        position: 'relative',
+                                        cursor: onSelectAsset ? 'pointer' : 'default'
                                     }}
                                 >
                                     <div style={{ width: '100%', aspectRatio: '16/9', overflow: 'hidden', position: 'relative' }}>
-                                        <img
-                                            src={asset.url}
-                                            alt={asset.prompt}
-                                            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                                        />
+                                        {asset.type === 'video' ? (
+                                            <video
+                                                src={asset.url}
+                                                autoPlay
+                                                muted
+                                                loop
+                                                playsInline
+                                                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                                            />
+                                        ) : (
+                                            <img
+                                                src={asset.url}
+                                                alt={asset.prompt}
+                                                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                                            />
+                                        )}
                                         <div style={{
                                             position: 'absolute',
                                             top: '12px',

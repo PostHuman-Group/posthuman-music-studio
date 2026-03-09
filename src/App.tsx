@@ -23,6 +23,7 @@ import './index.css';
 
 const PostHumanStudio = () => {
   const [activeTab, setActiveTab] = useState<'dashboard' | 'assets' | 'library' | 'streams'>('dashboard');
+  const [activeBackground, setActiveBackground] = useState<{ url: string; type: 'image' | 'video' } | undefined>(undefined);
 
   const renderContent = () => {
     switch (activeTab) {
@@ -37,13 +38,16 @@ const PostHumanStudio = () => {
 
             {/* Right Column: Engine & Visuals */}
             <div className="grid-column">
-              <Visualizer isActive={true} />
+              <Visualizer
+                isActive={true}
+                backgroundAsset={activeBackground}
+              />
               <StreamEngine />
             </div>
           </div>
         );
       case 'assets':
-        return <AssetStudio />;
+        return <AssetStudio onSelectAsset={(asset) => setActiveBackground({ url: asset.url, type: asset.type })} />;
       case 'library':
         return <SampleLibrary />;
       case 'streams':

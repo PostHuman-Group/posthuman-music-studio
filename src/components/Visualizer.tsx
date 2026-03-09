@@ -2,68 +2,98 @@ import { motion } from 'framer-motion';
 import { Zap, Activity } from 'lucide-react';
 
 interface VisualizerProps {
-    isActive?: boolean;
+  isActive?: boolean;
+  backgroundAsset?: {
+    url: string;
+    type: 'image' | 'video';
+  };
 }
 
-const Visualizer = ({ isActive = false }: VisualizerProps) => {
-    return (
-        <div className="visualizer-container glass-box overflow-hidden">
-            <div className="viz-header">
-                <Activity size={16} className="glow-purple" />
-                <span className="logo-sub">REAL-TIME VISUAL FEED</span>
-                <Zap size={16} className={isActive ? 'glow-blue pulse' : 'glow-blue'} />
-            </div>
+const Visualizer = ({ isActive = false, backgroundAsset }: VisualizerProps) => {
+  const isVideo = backgroundAsset?.type === 'video';
 
-            <div className="viz-content">
-                {/* Plasma Background */}
-                <div className={`plasma-aura ${isActive ? 'active' : ''}`} />
+  return (
+    <div className="visualizer-container glass-box overflow-hidden">
+      <div className="viz-header">
+        <Activity size={16} className="glow-purple" />
+        <span className="logo-sub">
+          {backgroundAsset ? `FEED: ${backgroundAsset.type.toUpperCase()} ACTIVE` : 'REAL-TIME VISUAL FEED'}
+        </span>
+        <Zap size={16} className={isActive ? 'glow-blue pulse' : 'glow-blue'} />
+      </div>
 
-                {/* Frequency Bars */}
-                <div className="frequency-display">
-                    {[...Array(32)].map((_, i) => (
-                        <motion.div
-                            key={i}
-                            className="freq-bar"
-                            animate={isActive ? {
-                                height: [20, Math.random() * 80 + 20, 20],
-                                opacity: [0.3, 0.8, 0.3]
-                            } : { height: 4 }}
-                            transition={{
-                                duration: 0.5 + Math.random(),
-                                repeat: Infinity,
-                                ease: "easeInOut"
-                            }}
-                        />
-                    ))}
-                </div>
+      <div className="viz-content">
+        {/* Dynamic Background Asset */}
+        {backgroundAsset && (
+          <div className="viz-background">
+            {isVideo ? (
+              <video
+                src={backgroundAsset.url}
+                autoPlay
+                muted
+                loop
+                playsInline
+                style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: 0.6 }}
+              />
+            ) : (
+              <img
+                src={backgroundAsset.url}
+                alt="Visualizer Background"
+                style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: 0.6 }}
+              />
+            )}
+          </div>
+        )}
 
-                {/* Floating Geometric Particles */}
-                {isActive && [...Array(10)].map((_, i) => (
-                    <motion.div
-                        key={`p-${i}`}
-                        className="viz-particle"
-                        initial={{ x: '50%', y: '50%', opacity: 0 }}
-                        animate={{
-                            x: `${Math.random() * 100}%`,
-                            y: `${Math.random() * 100}%`,
-                            opacity: [0, 0.5, 0],
-                            scale: [0.5, 1.5, 0.5]
-                        }}
-                        transition={{
-                            duration: 3 + Math.random() * 4,
-                            repeat: Infinity,
-                            ease: "linear"
-                        }}
-                    />
-                ))}
+        {/* Plasma Background (Fallback/Overlay) */}
+        <div className={`plasma-aura ${isActive ? 'active' : ''} ${backgroundAsset ? 'dimmed' : ''}`} />
 
-                <div className="viz-overlay">
-                    <div className="scanline" />
-                    <div className="vignette" />
-                </div>
-            </div>
+        {/* Frequency Bars */}
+        <div className="frequency-display">
+          {[...Array(32)].map((_, i) => (
+            <motion.div
+              key={i}
+              className="freq-bar"
+              animate={isActive ? {
+                height: [20, Math.random() * 80 + 20, 20],
+                opacity: [0.3, 0.8, 0.3]
+              } : { height: 4 }}
+              transition={{
+                duration: 0.5 + Math.random(),
+                repeat: Infinity,
+                ease: "easeInOut"
+              }}
+            />
+          ))}
+        </div>
 
-            <style>{`
+        {/* Floating Geometric Particles */}
+        {isActive && [...Array(10)].map((_, i) => (
+          <motion.div
+            key={`p-${i}`}
+            className="viz-particle"
+            initial={{ x: '50%', y: '50%', opacity: 0 }}
+            animate={{
+              x: `${Math.random() * 100}%`,
+              y: `${Math.random() * 100}%`,
+              opacity: [0, 0.5, 0],
+              scale: [0.5, 1.5, 0.5]
+            }}
+            transition={{
+              duration: 3 + Math.random() * 4,
+              repeat: Infinity,
+              ease: "linear"
+            }}
+          />
+        ))}
+
+        <div className="viz-overlay">
+          <div className="scanline" />
+          <div className="vignette" />
+        </div>
+      </div>
+
+      <style>{`
         .visualizer-container {
           height: 400px;
           display: flex;
@@ -88,6 +118,13 @@ const Visualizer = ({ isActive = false }: VisualizerProps) => {
           display: flex;
           align-items: flex-end;
           padding: 20px;
+          overflow: hidden;
+        }
+
+        .viz-background {
+          position: absolute;
+          inset: 0;
+          z-index: 1;
         }
 
         .plasma-aura {
@@ -102,6 +139,11 @@ const Visualizer = ({ isActive = false }: VisualizerProps) => {
           filter: blur(80px);
           opacity: 0.1;
           transition: opacity 1s ease;
+          z-index: 2;
+        }
+
+        .plasma-aura.dimmed {
+          opacity: 0.05;
         }
 
         .plasma-aura.active {
@@ -123,6 +165,7 @@ const Visualizer = ({ isActive = false }: VisualizerProps) => {
           background: linear-gradient(to top, var(--blue-main), var(--purple-main));
           border-radius: 2px 2px 0 0;
           min-height: 4px;
+          box-shadow: 0 0 10px rgba(0, 222, 255, 0.3);
         }
 
         .viz-particle {
@@ -132,7 +175,7 @@ const Visualizer = ({ isActive = false }: VisualizerProps) => {
           background: white;
           border-radius: 50%;
           box-shadow: 0 0 10px white;
-          z-index: 2;
+          z-index: 4;
         }
 
         .viz-overlay {
@@ -170,8 +213,8 @@ const Visualizer = ({ isActive = false }: VisualizerProps) => {
           .frequency-display { gap: 2px; }
         }
       `}</style>
-        </div>
-    );
+    </div>
+  );
 };
 
 export default Visualizer;
