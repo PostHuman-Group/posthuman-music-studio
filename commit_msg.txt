@@ -1,7 +1,5 @@
-feat(assets): implement AI Image Generation and Asset Studio dashboard
+fix(build): resolve TypeScript unused import errors in App and Schema
 
-- Implemented imageGenerationFlow in Genkit using Gemini 1.5 for prompt engineering.
-- Created AssetStudio component for managing AI visual assets.
-- Integrated Asset Studio into the main App.tsx with a new navigation tab.
-- Refactored App.tsx to handle tab-based navigation for a cleaner dashboard experience.
-- Resolved database schema migration for the assets table.
+- Removed unused React import from App.tsx.
+- Removed unused boolean import from schema.ts.
+- Verified successful production build (tsc + vite build).
