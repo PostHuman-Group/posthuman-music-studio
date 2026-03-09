@@ -1,6 +1,11 @@
 # PostHuman Music: Studio
 
-PostHuman Music: Studio is an AI-native superagent tool designed to generate audio and visual assets for live music radio streams. Developed specifically for the PostHuman YouTube channel, it automates composition, sample generation, and streaming schedules.
+PostHuman Music: Studio is an AI superagent music production tool that:
+
+- generates audio, image, and video assets for 24/7 live music radio streams;
+- sets up, manages, and schedules 24/7 music livestreams.
+
+PostHuman Music: Studio is being built specifically for the PostHuman Music brand (not launched yet).
 
 ## Core Features
 
