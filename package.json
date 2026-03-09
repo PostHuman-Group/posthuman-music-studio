@@ -13,6 +13,7 @@
     "@genkit-ai/dotprompt": "^0.9.12",
     "@genkit-ai/googleai": "^1.28.0",
     "@neondatabase/serverless": "^1.0.2",
+    "@netlify/neon": "^0.1.2",
     "drizzle-orm": "^0.45.1",
     "framer-motion": "^12.35.2",
     "genkit": "^1.29.0",
