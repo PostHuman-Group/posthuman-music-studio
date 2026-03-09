@@ -1,0 +1,181 @@
+/* 
+  PostHuman Music: Studio - Design System
+  Theme: Midnight Future / Nighttime Comfort
+  Vertical Rhythm: 24px (1.5rem)
+*/
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400&family=Source+Code+Pro&family=Work+Sans:wght@400;500&display=swap');
+
+:root {
+  /* Colors - Background (Midnight Indigo) */
+  --bg-main: #09091a;
+  --bg-tint-1: #1a1a3a;
+  --bg-tint-2: #2a2a5a;
+  --bg-shade-1: #050510;
+  --bg-shade-2: #020205;
+
+  /* Accent 1 - Electric Blue (Primary Complementary) */
+  --blue-main: #00deff;
+  --blue-tint-1: #70edff;
+  --blue-tint-2: #bdedff;
+  --blue-shade-1: #008bad;
+  --blue-shade-2: #004e61;
+  --blue-desat-1: #82a8b0;
+  --blue-desat-2: #a6c1c7;
+
+  /* Accent 3 - Electric Purple (Secondary Complementary) */
+  --purple-main: #bf00ff;
+  --purple-tint-1: #d470ff;
+  --purple-tint-2: #e8bdff;
+  --purple-shade-1: #8100ad;
+  --purple-shade-2: #490061;
+  --purple-desat-1: #9982b0;
+  --purple-desat-2: #b4a6c7;
+
+  /* Accent 2 - Plasma Magenta */
+  --magenta-main: #ff00cc;
+  --magenta-tint-1: #ff70e0;
+  --magenta-tint-2: #ffbdf0;
+  --magenta-shade-1: #ad008b;
+  --magenta-shade-2: #61004e;
+  --magenta-desat-1: #b082a5;
+  --magenta-desat-2: #c7a6bf;
+
+  /* Accent 4 - Amber-Gold */
+  --gold-main: #ffbf00;
+  --gold-tint-1: #ffd470;
+  --gold-tint-2: #ffe8bd;
+  --gold-shade-1: #ad8100;
+  --gold-shade-2: #614900;
+  --gold-desat-1: #b0a182;
+  --gold-desat-2: #c7bea6;
+
+  /* System Colors */
+  --sys-red: #d66c6c;
+  --sys-amber: #d6a36c;
+  --sys-green: #6cd6a3;
+
+  /* Typography */
+  --font-heading: 'Inter', sans-serif;
+  --font-body: 'Work Sans', sans-serif;
+  --font-mono: 'Source Code Pro', monospace;
+
+  /* Vertical Rhythm & Spacing */
+  --base-size: 16px;
+  --line-height: 1.5;
+  --rhythm: 24px; /* 1.5rem */
+
+  --space-xs: calc(var(--rhythm) / 4); /* 6px */
+  --space-sm: calc(var(--rhythm) / 2); /* 12px */
+  --space-md: var(--rhythm);           /* 24px */
+  --space-lg: calc(var(--rhythm) * 2); /* 48px */
+  --space-xl: calc(var(--rhythm) * 4); /* 96px */
+
+  /* Shadows & Glassmorphism */
+  --glass-bg: rgba(26, 26, 58, 0.6);
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --shadow-glow: 0 0 20px rgba(0, 222, 255, 0.2);
+}
+
+/* Reset & Base Styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: var(--bg-main);
+  color: #ffffff;
+  font-family: var(--font-body);
+  font-size: var(--base-size);
+  line-height: var(--line-height);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Vertical Rhythm Grid */
+h1, h2, h3, h4, h5, h6, p, ul, ol, blockquote, figure {
+  margin-bottom: var(--rhythm);
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-heading);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+h1 { font-size: 3rem; line-height: calc(var(--rhythm) * 2); font-weight: 300; }
+h2 { font-size: 2.25rem; line-height: calc(var(--rhythm) * 2); font-weight: 300; }
+h3 { font-size: 1.5rem; line-height: var(--rhythm); font-weight: 300; }
+h4 { font-size: 1.25rem; line-height: var(--rhythm); font-weight: 400; }
+h5 { font-size: 1rem; line-height: var(--rhythm); font-weight: 500; }
+h6 { font-size: 0.875rem; line-height: var(--rhythm); font-weight: 500; }
+
+a {
+  color: var(--blue-main);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+a:hover {
+  color: var(--purple-main);
+}
+
+/* Gradients & Aurora Effects */
+.aurora-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  background: radial-gradient(circle at 20% 30%, var(--bg-tint-1) 0%, transparent 50%),
+              radial-gradient(circle at 80% 70%, var(--purple-shade-2) 0%, transparent 50%),
+              radial-gradient(circle at 50% 50%, var(--bg-main) 0%, var(--bg-shade-2) 100%);
+  overflow: hidden;
+}
+
+.glow-blue { color: var(--blue-main); text-shadow: var(--shadow-glow); }
+.glow-purple { color: var(--purple-main); text-shadow: 0 0 20px rgba(191, 0, 255, 0.3); }
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: var(--space-sm) var(--space-md);
+  height: calc(var(--rhythm) * 2);
+  border-radius: 4px;
+  font-family: var(--font-heading);
+  font-weight: 400;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border: none;
+  font-size: 1rem;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--purple-main), var(--blue-main));
+  color: white;
+}
+
+.btn-primary:hover {
+  filter: brightness(1.1);
+  box-shadow: 0 0 30px rgba(0, 222, 255, 0.4);
+  transform: translateY(-2px);
+}
+
+.btn-ghost {
+  background: transparent;
+  border: 1px solid var(--purple-desat-1);
+  color: var(--purple-desat-1);
+}
+
+.btn-ghost:hover {
+  background: var(--purple-shade-2);
+  border-color: var(--purple-main);
+  color: white;
+}
