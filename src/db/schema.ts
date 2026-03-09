@@ -24,10 +24,17 @@ export const schedules = pgTable('schedules', {
 
 export const platforms = pgTable('platforms', {
     id: uuid('id').primaryKey().defaultRandom(),
-    name: varchar('name', { length: 100 }).notNull(),
-    type: varchar('type', { length: 50 }).notNull(), // 'youtube', 'tiktok', etc.
-    handle: varchar('handle', { length: 100 }),
-    connected: boolean('connected').default(false),
-    status: text('status'),
-    lastSync: timestamp('last_sync'),
+    name: varchar('name', { length: 255 }).notNull(),
+    status: varchar('status', { length: 50 }).notNull().default('disconnected'),
+    token: text('token'),
+    updatedAt: timestamp('updated_at').defaultNow(),
+});
+
+export const assets = pgTable('assets', {
+    id: uuid('id').primaryKey().defaultRandom(),
+    type: varchar('type', { length: 20 }).notNull(), // 'image' | 'video'
+    prompt: text('prompt').notNull(),
+    url: text('url').notNull(),
+    status: varchar('status', { length: 20 }).notNull().default('ready'),
+    createdAt: timestamp('created_at').defaultNow(),
 });

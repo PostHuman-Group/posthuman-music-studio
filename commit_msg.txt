@@ -1,0 +1,6 @@
+feat(db): implement assets table and refactor platforms schema
+- Added assets table for storing AI-generated image and video metadata.
+- Refactored platforms table to include secure token storage and updatedAt tracking.
+- Added dotenv dependency for environment variable resolution in Drizzle Kit.
+- Converted Drizzle configuration to CommonJS (drizzle.config.js) for CLI compatibility.
+- Synchronized schema with Neon database via drizzle-kit push.
