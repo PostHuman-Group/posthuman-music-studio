@@ -1,6 +1,6 @@
-feat(visuals): implement Video Asset Orchestrator and Visualizer integration
+feat(audio): implement real sample persistence and fix delete functionality
 
-- Added videoGenerationFlow to Genkit for looping background orchestration.
-- Upgraded AssetStudio UI to support video generation and selection.
-- Enhanced Visualizer to support dynamic video looping backgrounds.
-- Resolved TypeScript build errors and verified stable production build.
+- Added sampleGenerationFlow to Genkit with Neon DB sync.
+- Created get-samples and delete-sample Netlify functions.
+- Updated SampleLibrary UI to connect to live backend.
+- Resolved delete button event handler bug and added loading states.

@@ -1,7 +1,7 @@
 import { z } from 'genkit';
 import { ai } from '../../genkit-config';
 import { db } from '../db';
-import { assets } from '../db/schema';
+import { assets, samples } from '../db/schema';
 
 export const imageGenerationFlow = ai.defineFlow(
     {
@@ -100,5 +100,61 @@ export const videoGenerationFlow = ai.defineFlow(
         }));
 
         return { assets: generatedAssets };
+    }
+);
+
+export const sampleGenerationFlow = ai.defineFlow(
+    {
+        name: 'sampleGenerationFlow',
+        inputSchema: z.object({
+            prompt: z.string(),
+        }),
+        outputSchema: z.object({
+            sample: z.object({
+                id: z.string(),
+                name: z.string(),
+                theme: z.string(),
+                duration: z.string(),
+                type: z.string(),
+                createdAt: z.string(),
+            }),
+        }),
+    },
+    async (input) => {
+        // 1. Generate sample metadata using Gemini
+        const { text: name } = await ai.generate({
+            model: 'googleai/gemini-1.5-flash',
+            prompt: `Generate a short, cool names (max 2 words) for a musical sample/loop based on this prompt: "${input.prompt}". 
+            Style: PostHuman, Cyberpunk, Futuristic. 
+            Return ONLY the name.`,
+        });
+
+        const sampleType = input.prompt.toLowerCase().includes('drum') ? 'drum' :
+            input.prompt.toLowerCase().includes('vocal') ? 'vocal' :
+                input.prompt.toLowerCase().includes('synth') ? 'synth' : 'loop';
+
+        // 2. Mock asset URL (In production this would call a Music AI model)
+        const url = `https://storage.googleapis.com/posthuman-samples/mock-sample-${Math.random().toString(36).slice(2)}.mp3`;
+
+        // 3. Save to Neon DB
+        const [newSample] = await db.insert(samples).values({
+            name: name.trim(),
+            prompt: input.prompt,
+            url: url,
+            type: sampleType,
+            theme: input.prompt,
+            duration: '0:30',
+        }).returning();
+
+        return {
+            sample: {
+                id: newSample.id,
+                name: newSample.name,
+                theme: newSample.theme || '',
+                duration: newSample.duration || '0:00',
+                type: newSample.type || 'loop',
+                createdAt: new Date().toISOString(),
+            }
+        };
     }
 );
