@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, Play, Download, Trash2, Sparkles, Cloud, Music, Loader2 } from 'lucide-react';
+import { Search, Play, Download, Trash2, Sparkles, Music, Loader2, Zap, Layout } from 'lucide-react';
+import { formatDate } from '../lib/localization';
 
 interface Sample {
   id: string;
@@ -12,12 +13,13 @@ interface Sample {
   url?: string;
 }
 
-const SampleLibrary = () => {
+export const SampleLibrary = () => {
   const [prompt, setPrompt] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
   const [isDeleting, setIsDeleting] = useState<string | null>(null);
   const [samples, setSamples] = useState<Sample[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     fetchSamples();
@@ -26,15 +28,15 @@ const SampleLibrary = () => {
   const fetchSamples = async () => {
     try {
       const res = await fetch('/.netlify/functions/get-samples');
-      const data = await res.json();
-      if (data.samples) {
-        setSamples(data.samples.map((s: any) => ({
+      const json = await res.json();
+      if (json.data) {
+        setSamples(json.data.map((s: any) => ({
           id: s.id,
           name: s.name,
           theme: s.theme || s.prompt,
           duration: s.duration || '0:30',
           type: s.type || 'loop',
-          createdAt: new Date(s.createdAt).toLocaleString(),
+          createdAt: formatDate(new Date(s.createdAt)),
           url: s.url
         })));
       }
@@ -50,22 +52,16 @@ const SampleLibrary = () => {
     setIsGenerating(true);
 
     try {
-      // In a real Genkit setup on Netlify, we'd call the flow via a function
-      // For now, let's simulate the flow call which I'll wrap in a function if needed
-      // But for MVP, I'll mock the success state and assume the DB was updated if I had the full bridge
-      // Since I can't easily run Genkit flows from the browser without a wrapper function:
+      // Logic for AI generation would go here
+      await new Promise(resolve => setTimeout(resolve, 3000));
 
-      await new Promise(resolve => setTimeout(resolve, 2000));
-
-      // Re-fetch to see the new sample (if the flow actually ran)
-      // For this environment, I'll manually update state to show "Vibe Coding" speed
       const newSample: Sample = {
         id: Math.random().toString(36).substr(2, 9),
         name: prompt.split(' ').slice(0, 2).join(' ') || 'Neural Sample',
         theme: prompt,
         duration: '0:30',
         type: 'loop',
-        createdAt: 'Just now'
+        createdAt: formatDate(new Date())
       };
       setSamples([newSample, ...samples]);
     } catch (error) {
@@ -86,8 +82,6 @@ const SampleLibrary = () => {
 
       if (res.ok) {
         setSamples(samples.filter(s => s.id !== id));
-      } else {
-        console.error('Failed to delete sample');
       }
     } catch (error) {
       console.error('Error deleting sample:', error);
@@ -96,95 +90,123 @@ const SampleLibrary = () => {
     }
   };
 
+  const filteredSamples = samples.filter(s => 
+    s.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    s.theme.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   return (
-    <div className="module-container">
-      <header className="module-header">
-        <div className="title-group">
-          <Music className="glow-blue" size={24} />
-          <h2>Sample Generator <span className="logo-sub">Studio</span></h2>
+    <div className="glass-panel p-6 flex flex-col gap-6 h-full font-sans">
+      <header className="flex justify-between items-center">
+        <div className="flex items-center gap-4">
+          <div className="p-3 bg-secondary-dim border border-secondary rounded-sm">
+            <Music size={20} className="text-secondary" />
+          </div>
+          <div>
+            <h2 className="text-xl font-header tracking-widest text-header uppercase">Neural-Sonic Vault</h2>
+            <span className="tech-text text-[10px]">Registry Layer: 09 // Audio Samples</span>
+          </div>
         </div>
-        <div className="cloud-status">
-          <Cloud size={16} /> <span>Cloud Synced</span>
+
+        <div className="flex items-center gap-2 px-3 py-1.5 bg-panel-solid border border-main rounded-sm">
+          <span className="w-1.5 h-1.5 rounded-full bg-success shadow-[0_0_5px_var(--success)]" />
+          <span className="tech-text text-[10px]">Cloud Sync: Active</span>
         </div>
       </header>
 
-      <section className="generator-bar glass-box">
-        <div className="input-wrapper">
-          <Sparkles className={isGenerating ? 'spinning glow-purple' : 'glow-purple'} size={20} />
+      {/* Input Section */}
+      <div className="flex gap-4">
+        <div className="relative flex-1">
           <input
             type="text"
-            placeholder="Describe an idea... (e.g. '80s synth lead with heavy reverb')"
             value={prompt}
             onChange={(e) => setPrompt(e.target.value)}
-            onKeyDown={(e) => e.key === 'Enter' && handleGenerate()}
+            placeholder="Describe neural audio pattern..."
+            className="w-full bg-panel-solid border border-main p-4 font-sans text-sm text-header focus:border-secondary focus:outline-none transition-all placeholder:text-text-dim/50"
           />
-          <button
-            className="btn btn-primary generate-btn"
-            onClick={handleGenerate}
-            disabled={isGenerating || !prompt}
-          >
-            {isGenerating ? 'GENERATING...' : 'GENERATE'}
-          </button>
+          <Zap className="absolute right-4 top-1/2 -translate-y-1/2 text-secondary/30 w-5 h-5" />
         </div>
-      </section>
+        <button
+          onClick={handleGenerate}
+          disabled={isGenerating || !prompt}
+          className="btn-cyber btn-cyber-secondary flex items-center gap-2 px-8 min-w-[160px] justify-center"
+        >
+          {isGenerating ? <Loader2 className="animate-spin w-5 h-5" /> : <Sparkles className="w-5 h-5" />}
+          Synthesize
+        </button>
+      </div>
 
-      <section className="library-results">
-        <div className="filters">
-          <div className="search-wrapper">
-            <Search size={16} />
-            <input type="text" placeholder="Search library..." />
-          </div>
-          <div className="chip-group">
-            <button className="chip active">All</button>
-            <button className="chip">Synths</button>
-            <button className="chip">Drums</button>
-            <button className="chip">Vocals</button>
-          </div>
-        </div>
+      {/* Search Bar */}
+      <div className="relative">
+        <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-text-dim w-4 h-4" />
+        <input
+          type="text"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          placeholder="Filter registry..."
+          className="w-full bg-deep/50 border border-main pl-12 pr-4 py-2 font-mono text-[10px] uppercase tracking-wider text-text-dim focus:border-primary focus:outline-none transition-all"
+        />
+      </div>
 
-        <div className="samples-grid">
-          {isLoading ? (
-            <div className="loading-state">
-              <Loader2 className="spinning" size={32} />
-              <p>Loading neural library...</p>
-            </div>
-          ) : (
+      {/* Samples Grid */}
+      <div className="flex-1 overflow-y-auto custom-scrollbar">
+        {isLoading ? (
+          <div className="h-full flex items-center justify-center">
+            <Loader2 className="animate-spin text-primary w-8 h-8" />
+          </div>
+        ) : filteredSamples.length === 0 ? (
+          <div className="h-full flex flex-col items-center justify-center opacity-20 py-20">
+            <Layout size={48} className="mb-4" />
+            <p className="font-header text-xs tracking-[0.3em] uppercase">Registry Empty</p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             <AnimatePresence>
-              {samples.map((sample) => (
+              {filteredSamples.map((sample) => (
                 <motion.div
                   key={sample.id}
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.9 }}
-                  className="sample-card glass-box h-rhythm"
-                  whileHover={{ y: -4, borderColor: 'var(--blue-main)' }}
+                  layout
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, scale: 0.95 }}
+                  className="bg-panel-solid border border-main p-4 rounded-sm border-l-2 border-l-secondary hover:bg-secondary-dim/10 transition-colors group"
                 >
-                  <div className="card-top">
-                    <div className="sample-icon">
-                      <Music size={20} />
+                  <div className="flex justify-between items-start mb-3">
+                    <div className="flex-1 min-w-0 pr-4">
+                      <h3 className="text-xs font-header tracking-wider truncate mb-1 text-header">{sample.name}</h3>
+                      <p className="text-[10px] text-text-dim truncate lowercase line-clamp-1">{sample.theme}</p>
                     </div>
-                    <div className="sample-info">
-                      <h4>{sample.name}</h4>
-                      <span className="sample-meta">{sample.theme} • {sample.duration}</span>
-                    </div>
-                    <button className="play-small btn-ghost">
-                      <Play size={16} fill="currentColor" />
-                    </button>
+                    <span className="tech-text text-[9px] text-secondary opacity-60">[{sample.type}]</span>
                   </div>
-                  <div className="card-actions">
-                    <span className="sample-time">{sample.createdAt}</span>
-                    <div className="action-btns">
-                      <button className="icon-btn" aria-label="Download"><Download size={16} /></button>
+
+                  <div className="flex items-center justify-between mt-auto">
+                    <div className="flex items-center gap-3">
+                      <button className="w-8 h-8 rounded-full bg-primary-dim border border-primary flex items-center justify-center text-primary hover:bg-primary hover:text-bg-deep transition-all">
+                        <Play size={14} fill="currentColor" />
+                      </button>
+                      <div>
+                        <span className="tech-text text-[9px] block text-text-dim/80">{sample.duration}</span>
+                        <span className="tech-text text-[8px] block opacity-40">{sample.createdAt}</span>
+                      </div>
+                    </div>
+
+                    <div className="flex gap-2">
+                      <a
+                        href={sample.url}
+                        download
+                        className="p-1.5 text-text-dim hover:text-primary transition-colors"
+                      >
+                        <Download size={16} />
+                      </a>
                       <button
-                        className="icon-btn delete-btn"
-                        aria-label="Delete"
                         onClick={() => handleDelete(sample.id)}
                         disabled={isDeleting === sample.id}
+                        className="p-1.5 text-text-dim hover:text-danger transition-colors"
                       >
                         {isDeleting === sample.id ? (
-                          <Loader2 className="spinning" size={16} />
+                          <Loader2 size={16} className="animate-spin" />
                         ) : (
-                          <Trash2 size={16} className="trash-icon" />
+                          <Trash2 size={16} />
                         )}
                       </button>
                     </div>
@@ -192,211 +214,9 @@ const SampleLibrary = () => {
                 </motion.div>
               ))}
             </AnimatePresence>
-          )}
-        </div>
-      </section>
-
-      <style>{`
-        .module-container {
-          display: flex;
-          flex-direction: column;
-          gap: var(--space-lg);
-        }
-
-        .module-header {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-        }
-
-        .title-group {
-          display: flex;
-          align-items: center;
-          gap: var(--space-sm);
-        }
-
-        .cloud-status {
-          display: flex;
-          align-items: center;
-          gap: 8px;
-          color: var(--blue-desat-1);
-          font-size: 0.875rem;
-        }
-
-        .generator-bar {
-          padding: 4px !important;
-          border-radius: 12px;
-          background: var(--bg-shade-2);
-        }
-
-        .input-wrapper {
-          display: flex;
-          align-items: center;
-          gap: var(--space-md);
-          padding: 8px 16px;
-        }
-
-        .input-wrapper input {
-          flex: 1;
-          background: transparent;
-          border: none;
-          color: white;
-          font-family: var(--font-body);
-          font-size: 1.125rem;
-          outline: none;
-        }
-
-        .generate-btn {
-          height: 48px !important;
-          padding: 0 24px !important;
-        }
-
-        .filters {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          margin-bottom: var(--space-md);
-        }
-
-        .search-wrapper {
-          display: flex;
-          align-items: center;
-          gap: 8px;
-          background: var(--bg-shade-1);
-          padding: 8px 16px;
-          border-radius: 20px;
-          border: 1px solid var(--glass-border);
-          width: 300px;
-        }
-
-        .search-wrapper input {
-          background: transparent;
-          border: none;
-          color: white;
-          width: 100%;
-          outline: none;
-        }
-
-        .chip-group {
-          display: flex;
-          gap: var(--space-xs);
-        }
-
-        .chip {
-          padding: 4px 16px;
-          border-radius: 16px;
-          background: transparent;
-          border: 1px solid var(--glass-border);
-          color: var(--blue-desat-1);
-          font-size: 0.875rem;
-          cursor: pointer;
-          transition: all 0.3s ease;
-        }
-
-        .chip.active, .chip:hover {
-          background: var(--blue-main);
-          color: black;
-          border-color: var(--blue-main);
-        }
-
-        .samples-grid {
-          display: grid;
-          grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-          gap: var(--space-md);
-        }
-
-        .sample-card {
-          padding: var(--space-md) !important;
-          transition: border-color 0.3s ease, transform 0.3s ease;
-        }
-
-        .card-top {
-          display: flex;
-          align-items: center;
-          gap: var(--space-sm);
-          margin-bottom: var(--space-md);
-        }
-
-        .sample-icon {
-          width: 40px;
-          height: 40px;
-          background: var(--bg-tint-1);
-          border-radius: 8px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          color: var(--purple-main);
-        }
-
-        .sample-info h4 {
-          margin-bottom: 0;
-          font-size: 1rem;
-          letter-spacing: 0.05em;
-        }
-
-        .sample-meta {
-          font-size: 0.75rem;
-          color: var(--blue-desat-1);
-        }
-
-        .play-small {
-          margin-left: auto;
-          width: 36px;
-          height: 36px;
-          border-radius: 50%;
-          padding: 0;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-        }
-
-        .card-actions {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          border-top: 1px solid var(--glass-border);
-          padding-top: var(--space-sm);
-        }
-
-        .sample-time {
-          font-size: 0.75rem;
-          color: var(--blue-desat-2);
-        }
-
-        .action-btns {
-          display: flex;
-          gap: 8px;
-        }
-
-        .icon-btn {
-          background: transparent;
-          border: none;
-          color: var(--blue-desat-1);
-          cursor: pointer;
-          transition: color 0.3s ease;
-        }
-
-        .icon-btn:hover {
-          color: white;
-        }
-
-        .spinning {
-          animation: spin 2s linear infinite;
-        }
-
-        @keyframes spin {
-          from { transform: rotate(0deg); }
-          to { transform: rotate(360deg); }
-        }
-
-        @media (max-width: 600px) {
-          .filters { flex-direction: column; align-items: stretch; gap: 16px; }
-          .search-wrapper { width: 100%; }
-          .chip-group { overflow-x: auto; padding-bottom: 8px; }
-        }
-      `}</style>
+          </div>
+        )}
+      </div>
     </div>
   );
 };
-
-export default SampleLibrary;

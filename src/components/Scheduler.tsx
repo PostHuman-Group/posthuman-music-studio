@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import { Share2, Youtube, Instagram, Globe, Link2, ExternalLink, Calendar, Loader2 } from 'lucide-react';
+import { Share2, Youtube, Instagram, Globe, Link2, ExternalLink, Calendar, Loader2, Zap } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 interface Platform {
   name: string;
@@ -16,29 +17,26 @@ interface ScheduleEvent {
   contentRef: string;
 }
 
-const Scheduler = () => {
+export const Scheduler = () => {
   const [events, setEvents] = useState<ScheduleEvent[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   const platforms: Platform[] = [
     { name: 'YouTube', icon: Youtube, connected: true, status: 'Ready' },
-    { name: 'Instagram', icon: Instagram, connected: false, status: 'Connect to stream' },
+    { name: 'Instagram', icon: Instagram, connected: false, status: 'Connect account' },
     { name: 'TikTok', icon: Globe, connected: true, status: 'Scheduled (9pm)' },
   ];
 
   useEffect(() => {
     const fetchSchedules = async () => {
       try {
-        // In local development, we call the netlify function endpoint
-        // When deployed, this is /.netlify/functions/get-schedules
         const response = await fetch('/.netlify/functions/get-schedules');
         if (response.ok) {
-          const data = await response.json();
-          setEvents(data);
+          const json = await response.json();
+          setEvents(json.data || []);
         } else {
-          // Fallback to mock data if function not available yet (local dev)
           setEvents([
-            { id: '1', title: 'Neural Dreams 24h Loop', startTime: new Date().toISOString(), status: 'scheduled', contentRef: 'RTMP: YT-01' }
+            { id: '1', title: 'NEURAL_DREAMS_24H', startTime: new Date().toISOString(), status: 'scheduled', contentRef: 'RTMP: YT-01' }
           ]);
         }
       } catch (error) {
@@ -52,206 +50,104 @@ const Scheduler = () => {
   }, []);
 
   return (
-    <div className="scheduler-container glass-box">
-      <header className="module-header">
-        <div className="title-group">
-          <Share2 className="glow-magenta" size={24} />
-          <h2>Studio Bridge <span className="logo-sub">Scheduler</span></h2>
+    <div className="glass-panel h-full flex flex-col overflow-hidden font-sans">
+      <header className="p-4 border-b border-main flex items-center justify-between bg-panel-solid/50">
+        <div className="flex items-center gap-3">
+          <Share2 size={18} className="text-accent" />
+          <h2 className="font-header text-sm tracking-widest text-header uppercase">
+            Bridge <span className="text-accent opacity-70 italic">Scheduler</span>
+          </h2>
         </div>
-        <button className="btn btn-ghost btn-sm">
-          <Link2 size={16} /> Connect Account
+        <button className="flex items-center gap-2 text-[10px] tech-text text-primary hover:text-white transition-colors">
+          <Link2 size={12} /> SYNC_NODES
         </button>
       </header>
 
-      <div className="scheduler-content h-rhythm">
-        <section className="platform-list">
-          <div className="section-header">
-            <h3>Target Platforms</h3>
-            <span className="badge">3 CONNECTED</span>
+      <div className="flex-1 overflow-y-auto p-4 space-y-6 custom-scrollbar">
+        <section>
+          <div className="flex items-center justify-between mb-3 px-1">
+            <span className="tech-text text-[10px] text-text-dim uppercase tracking-wider">Neural Links</span>
+            <span className="text-[9px] bg-primary/10 text-primary px-2 py-0.5 border border-primary/20 rounded-sm">
+              3 NODES ACTIVE
+            </span>
           </div>
-          <div className="platforms-grid">
+          <div className="grid grid-cols-1 gap-2">
             {platforms.map((p) => (
-              <div key={p.name} className="platform-card glass-box">
-                <p.icon size={20} className={p.connected ? 'glow-blue' : 'desat-text'} />
-                <div className="platform-info">
-                  <span className="platform-name">{p.name}</span>
-                  <span className={`platform-status ${p.connected ? 'active' : ''}`}>
-                    {p.status}
-                  </span>
+              <div key={p.name} className="flex items-center gap-3 p-3 bg-deep/40 border border-main/50 hover:border-primary/30 transition-colors group">
+                <div className={`p-2 rounded-sm ${p.connected ? 'bg-primary/10 text-primary' : 'bg-white/5 text-text-dim opacity-40'}`}>
+                   <p.icon size={16} />
                 </div>
-                {p.connected ? <ExternalLink size={14} className="desat-text" /> : null}
+                <div className="flex-1 min-w-0">
+                  <div className="text-[11px] font-header text-header uppercase tracking-tighter">{p.name}</div>
+                  <div className={`text-[9px] tech-text leading-none mt-1 ${p.connected ? 'text-primary' : 'text-text-dim'}`}>
+                    {p.status}
+                  </div>
+                </div>
+                {p.connected && (
+                  <ExternalLink size={12} className="text-text-dim group-hover:text-primary transition-colors cursor-pointer" />
+                )}
               </div>
             ))}
           </div>
         </section>
 
-        <section className="schedule-list">
-          <h3>Upcoming Events</h3>
-          {isLoading ? (
-            <div className="loading-state">
-              <Loader2 className="spinning" size={24} />
-              <span>Syncing with Neon...</span>
-            </div>
-          ) : (
-            <div className="events-container">
-              {events.length > 0 ? (
-                events.map(event => (
-                  <div key={event.id} className="event-item glass-box">
-                    <Calendar size={16} className="glow-purple" />
-                    <div className="event-info">
-                      <span className="event-title">{event.title}</span>
-                      <span className="event-meta">
-                        {new Date(event.startTime).toLocaleDateString()} • {new Date(event.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} • {event.contentRef}
-                      </span>
-                    </div>
-                    <div className={`status-pill ${event.status}`}>
-                      {event.status.toUpperCase()}
-                    </div>
+        <section className="flex-1 flex flex-col min-h-0">
+          <div className="flex items-center gap-2 mb-3 px-1">
+            <Calendar size={12} className="text-secondary" />
+            <span className="tech-text text-[10px] text-text-dim uppercase tracking-wider">OBS_TRANSMISSION_LOG</span>
+          </div>
+          
+          <div className="space-y-2">
+            {isLoading ? (
+              <div className="flex flex-col items-center justify-center py-12 gap-3">
+                <Loader2 className="animate-spin text-primary" size={24} />
+                <span className="tech-text text-[10px] text-primary animate-pulse">SYNCING_WITH_NEON...</span>
+              </div>
+            ) : (
+              <AnimatePresence>
+                {events.length > 0 ? (
+                  events.map((event, i) => (
+                    <motion.div 
+                      key={event.id}
+                      initial={{ opacity: 0, x: -10 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: i * 0.1 }}
+                      className="p-3 bg-deep/20 border-l-2 border-secondary/50 flex items-center justify-between group hover:bg-secondary/5"
+                    >
+                      <div className="flex-1 min-w-0 pr-4">
+                        <div className="text-[12px] font-header text-white truncate group-hover:text-secondary transition-colors uppercase tracking-tight">
+                          {event.title}
+                        </div>
+                        <div className="text-[9px] tech-text text-text-dim mt-1">
+                          {new Date(event.startTime).toLocaleDateString('en-GB')} • {new Date(event.startTime).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })} • {event.contentRef}
+                        </div>
+                      </div>
+                      <div className={`text-[8px] font-header px-2 py-0.5 border skew-x-[-10deg] ${
+                        event.status === 'scheduled' 
+                          ? 'border-secondary text-secondary bg-secondary/10' 
+                          : 'border-main text-text-dim'
+                      }`}>
+                        {event.status.toUpperCase()}
+                      </div>
+                    </motion.div>
+                  ))
+                ) : (
+                  <div className="text-center py-8 tech-text text-[10px] text-text-dim italic opacity-50">
+                    NO_ACTIVE_TRANSMISSIONS
                   </div>
-                ))
-              ) : (
-                <div className="empty-state">No events scheduled.</div>
-              )}
-            </div>
-          )}
-          <button className="btn btn-ghost w-full" style={{ marginTop: 'var(--space-md)' }}>
-            NEW SCHEDULED STREAM
-          </button>
+                )}
+              </AnimatePresence>
+            )}
+          </div>
         </section>
       </div>
 
-      <style>{`
-        .scheduler-container {
-          padding: var(--space-lg) !important;
-          display: flex;
-          flex-direction: column;
-          gap: var(--space-lg);
-        }
-
-        .scheduler-content {
-          display: flex;
-          flex-direction: column;
-          gap: var(--space-xl);
-        }
-
-        .section-header {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          margin-bottom: var(--space-sm);
-        }
-
-        .badge {
-          font-size: 0.625rem;
-          padding: 2px 8px;
-          background: var(--bg-tint-1);
-          border: 1px solid var(--blue-main);
-          border-radius: 4px;
-          color: var(--blue-main);
-          letter-spacing: 0.05em;
-        }
-
-        .platforms-grid {
-          display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-          gap: var(--space-md);
-        }
-
-        .platform-card {
-          padding: var(--space-md) !important;
-          display: flex;
-          align-items: center;
-          gap: var(--space-md);
-          border-color: var(--bg-tint-1);
-          transition: all 0.3s ease;
-        }
-
-        .platform-card:hover {
-          border-color: var(--blue-main);
-          background: var(--bg-tint-1);
-        }
-
-        .platform-info {
-          display: flex;
-          flex-direction: column;
-          flex: 1;
-        }
-
-        .platform-name {
-          font-weight: 600;
-          font-size: 0.875rem;
-        }
-
-        .platform-status {
-          font-size: 0.75rem;
-          color: var(--blue-desat-2);
-        }
-
-        .platform-status.active {
-          color: var(--blue-main);
-        }
-
-        .loading-state {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          gap: var(--space-sm);
-          padding: var(--space-xl);
-          color: var(--blue-desat-1);
-        }
-
-        .event-item {
-          padding: var(--space-sm) 16px !important;
-          display: flex;
-          align-items: center;
-          gap: 16px;
-          margin-bottom: var(--space-sm);
-        }
-
-        .event-info {
-          flex: 1;
-          display: flex;
-          flex-direction: column;
-        }
-
-        .event-title {
-          font-size: 0.9375rem;
-          font-weight: 500;
-        }
-
-        .event-meta {
-          font-size: 0.75rem;
-          color: var(--blue-desat-1);
-        }
-
-        .status-pill {
-          font-size: 0.625rem;
-          font-weight: 700;
-          padding: 2px 6px;
-          border-radius: 3px;
-          background: var(--bg-shade-1);
-          color: var(--blue-desat-2);
-        }
-
-        .status-pill.scheduled {
-          color: var(--purple-main);
-          border: 1px solid var(--purple-main);
-        }
-
-        .w-full {
-          width: 100%;
-          justify-content: center;
-        }
-
-        .spinning {
-          animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-          from { transform: rotate(0deg); }
-          to { transform: rotate(360deg); }
-        }
-      `}</style>
+      <footer className="p-4 bg-panel-solid/50 border-t border-main">
+        <button className="btn-cyber w-full py-2.5 text-[10px] flex items-center justify-center gap-2">
+           <Zap size={14} className="fill-current" />
+           INITIALIZE NEW TRANSCEIVER
+        </button>
+      </footer>
     </div>
   );
 };

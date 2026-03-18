@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Image as ImageIcon, Video, Sparkles, Loader2, Download, LayoutGrid, List } from 'lucide-react';
+import { Image as ImageIcon, Video, Sparkles, Loader2, Download, Zap, Layout } from 'lucide-react';
 
 export interface Asset {
     id: string;
@@ -20,7 +20,24 @@ export const AssetStudio: React.FC<AssetStudioProps> = ({ onSelectAsset }) => {
     const [theme, setTheme] = useState('');
     const [generationType, setGenerationType] = useState<'image' | 'video'>('image');
     const [isGenerating, setIsGenerating] = useState(false);
-    const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
+    const [isLoading, setIsLoading] = useState(true);
+
+    React.useEffect(() => {
+        const fetchAssets = async () => {
+            try {
+                const response = await fetch('/.netlify/functions/get-assets');
+                if (response.ok) {
+                    const json = await response.json();
+                    setAssets(json.data || []);
+                }
+            } catch (error) {
+                console.error('Failed to fetch assets:', error);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+        fetchAssets();
+    }, []);
 
     const generateAsset = async () => {
         if (!theme) return;
@@ -29,256 +46,141 @@ export const AssetStudio: React.FC<AssetStudioProps> = ({ onSelectAsset }) => {
         try {
             await new Promise(resolve => setTimeout(resolve, 3000));
 
-            const newAsset: Asset = {
-                id: Math.random().toString(36).substr(2, 9),
-                type: generationType,
-                prompt: theme,
-                url: generationType === 'image'
-                    ? `https://picsum.photos/seed/${Math.random()}/1920/1080`
-                    : `https://assets.mixkit.co/videos/preview/mixkit-cyberpunk-city-at-night-with-bright-neon-lights-44534-preview.mp4`,
-                status: 'ready',
-                createdAt: new Date().toISOString(),
-            };
+            const generatedUrl = generationType === 'image'
+                ? `https://picsum.photos/seed/${Math.random()}/1920/1080`
+                : `https://assets.mixkit.co/videos/preview/mixkit-cyberpunk-city-at-night-with-bright-neon-lights-44534-preview.mp4`;
 
-            setAssets([newAsset, ...assets]);
+            const res = await fetch('/.netlify/functions/save-asset', {
+                method: 'POST',
+                body: JSON.stringify({
+                    type: generationType,
+                    prompt: theme,
+                    url: generatedUrl,
+                }),
+            });
+
+            if (res.ok) {
+                const json = await res.json();
+                setAssets([json.data, ...assets]);
+            }
             setTheme('');
         } catch (error) {
-            console.error('Failed to generate asset:', error);
+            console.error('Failed to generate or save asset:', error);
         } finally {
             setIsGenerating(false);
         }
     };
 
     return (
-        <div className="asset-studio-container glass-box" style={{
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '24px',
-            padding: '24px',
-        }}>
-            <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                    <div style={{
-                        padding: '10px',
-                        background: 'linear-gradient(135deg, #bf00ff, #00deff)',
-                        borderRadius: '10px'
-                    }}>
-                        {generationType === 'image' ? <ImageIcon size={20} color="white" /> : <Video size={20} color="white" />}
+        <div className="glass-panel p-6 flex flex-col gap-6 h-full font-sans">
+            <header className="flex justify-between items-center">
+                <div className="flex items-center gap-4">
+                    <div className="p-3 bg-primary-dim border border-primary rounded-sm">
+                        {generationType === 'image' ? <ImageIcon size={20} className="text-primary" /> : <Video size={20} className="text-primary" />}
                     </div>
-                    <h2 style={{ fontSize: '1.25rem', fontWeight: 600, color: '#00deff' }}>Asset Studio</h2>
+                    <div>
+                        <h2 className="text-xl font-header tracking-widest text-header uppercase">Asset Neural-Forge</h2>
+                        <span className="tech-text text-[10px]">Matrix Layer: 04 // Priority: High</span>
+                    </div>
                 </div>
 
-                <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
-                    <div style={{ display: 'flex', background: 'rgba(5, 5, 16, 0.5)', padding: '4px', borderRadius: '8px' }}>
-                        <button
-                            onClick={() => setGenerationType('image')}
-                            style={{
-                                padding: '6px 12px',
-                                borderRadius: '6px',
-                                background: generationType === 'image' ? 'rgba(0, 222, 255, 0.2)' : 'transparent',
-                                border: 'none',
-                                cursor: 'pointer',
-                                color: generationType === 'image' ? '#00deff' : '#82a8b0',
-                                fontSize: '0.875rem'
-                            }}
-                        >
-                            Images
-                        </button>
-                        <button
-                            onClick={() => setGenerationType('video')}
-                            style={{
-                                padding: '6px 12px',
-                                borderRadius: '6px',
-                                background: generationType === 'video' ? 'rgba(0, 222, 255, 0.2)' : 'transparent',
-                                border: 'none',
-                                cursor: 'pointer',
-                                color: generationType === 'video' ? '#00deff' : '#82a8b0',
-                                fontSize: '0.875rem'
-                            }}
-                        >
-                            Video
-                        </button>
-                    </div>
-
-                    <div style={{ display: 'flex', background: 'rgba(5, 5, 16, 0.5)', padding: '4px', borderRadius: '8px' }}>
-                        <button
-                            onClick={() => setViewMode('grid')}
-                            style={{
-                                padding: '6px',
-                                borderRadius: '6px',
-                                background: viewMode === 'grid' ? 'rgba(0, 222, 255, 0.2)' : 'transparent',
-                                border: 'none',
-                                cursor: 'pointer'
-                            }}
-                        >
-                            <LayoutGrid size={18} color={viewMode === 'grid' ? '#00deff' : '#82a8b0'} />
-                        </button>
-                        <button
-                            onClick={() => setViewMode('list')}
-                            style={{
-                                padding: '6px',
-                                borderRadius: '6px',
-                                background: viewMode === 'list' ? 'rgba(0, 222, 255, 0.2)' : 'transparent',
-                                border: 'none',
-                                cursor: 'pointer'
-                            }}
-                        >
-                            <List size={18} color={viewMode === 'list' ? '#00deff' : '#82a8b0'} />
-                        </button>
-                    </div>
+                <div className="flex bg-panel-solid p-1 border border-main rounded-sm">
+                    <button
+                        onClick={() => setGenerationType('image')}
+                        className={`px-4 py-1.5 rounded-sm transition-all font-header text-[10px] uppercase ${
+                            generationType === 'image' ? 'bg-primary text-bg-deep' : 'text-text-dim hover:text-primary'
+                        }`}
+                    >
+                        Static
+                    </button>
+                    <button
+                        onClick={() => setGenerationType('video')}
+                        className={`px-4 py-1.5 rounded-sm transition-all font-header text-[10px] uppercase ${
+                            generationType === 'video' ? 'bg-primary text-bg-deep' : 'text-text-dim hover:text-primary'
+                        }`}
+                    >
+                        Motion
+                    </button>
                 </div>
             </header>
 
-            <section style={{ display: 'flex', gap: '12px' }}>
-                <input
-                    type="text"
-                    value={theme}
-                    onChange={(e) => setTheme(e.target.value)}
-                    placeholder={`Describe the ${generationType} theme (e.g., Cyberpunk Tokyo Pulse)...`}
-                    style={{
-                        flex: 1,
-                        background: 'rgba(5, 5, 16, 0.5)',
-                        border: '1px solid rgba(0, 222, 255, 0.2)',
-                        borderRadius: '12px',
-                        padding: '12px 16px',
-                        color: 'white',
-                        outline: 'none',
-                        fontSize: '1rem'
-                    }}
-                />
-                <motion.button
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
+            <div className="flex gap-4">
+                <div className="relative flex-1">
+                    <input
+                        type="text"
+                        value={theme}
+                        onChange={(e) => setTheme(e.target.value)}
+                        placeholder="Define visual aesthetic..."
+                        className="w-full bg-panel-solid border border-main p-4 font-sans text-sm text-header focus:border-primary focus:outline-none transition-all placeholder:text-text-dim/50"
+                    />
+                    <Sparkles className="absolute right-4 top-1/2 -translate-y-1/2 text-primary/30 w-5 h-5" />
+                </div>
+                <button
                     onClick={generateAsset}
                     disabled={isGenerating || !theme}
-                    style={{
-                        padding: '12px 24px',
-                        background: 'linear-gradient(135deg, #bf00ff, #ff00cc)',
-                        border: 'none',
-                        borderRadius: '12px',
-                        color: 'white',
-                        fontWeight: 600,
-                        cursor: 'pointer',
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '8px',
-                        opacity: isGenerating || !theme ? 0.6 : 1
-                    }}
+                    className="btn-cyber flex items-center gap-2 px-8 min-w-[160px] justify-center"
                 >
-                    {isGenerating ? (
-                        <Loader2 className="animate-spin" size={18} />
-                    ) : (
-                        <Sparkles size={18} />
-                    )}
-                    {isGenerating ? 'Generating...' : 'Invoke AI'}
-                </motion.button>
-            </section>
+                    {isGenerating ? <Loader2 className="animate-spin w-5 h-5" /> : <Zap className="w-5 h-5" />}
+                    Generate
+                </button>
+            </div>
 
-            <section className="assets-display">
-                {assets.length === 0 ? (
-                    <div style={{
-                        padding: '48px',
-                        textAlign: 'center',
-                        border: '2px dashed rgba(0, 222, 255, 0.1)',
-                        borderRadius: '16px',
-                        color: '#82a8b0'
-                    }}>
-                        <ImageIcon size={48} style={{ opacity: 0.2, marginBottom: '16px' }} />
-                        <p>No assets generated yet.</p>
-                        <p style={{ fontSize: '0.875rem' }}>Describe a theme above and invoke the AI to start your collection.</p>
+            <div className="flex-1 overflow-y-auto custom-scrollbar">
+                {isLoading ? (
+                    <div className="h-full flex items-center justify-center">
+                        <Loader2 className="animate-spin text-primary w-8 h-8" />
+                    </div>
+                ) : assets.length === 0 ? (
+                    <div className="h-full flex flex-col items-center justify-center opacity-20 py-20">
+                        <Layout size={48} className="mb-4" />
+                        <p className="font-header text-xs tracking-[0.3em] uppercase">No Assets Synthesized</p>
                     </div>
                 ) : (
-                    <div style={{
-                        display: viewMode === 'grid' ? 'grid' : 'flex',
-                        gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
-                        flexDirection: 'column',
-                        gap: '20px'
-                    }}>
-                        <AnimatePresence>
+                    <div className="grid grid-cols-2 gap-4">
+                        <AnimatePresence mode="popLayout">
                             {assets.map((asset) => (
                                 <motion.div
                                     key={asset.id}
-                                    initial={{ opacity: 0, y: 20 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    exit={{ opacity: 0, scale: 0.95 }}
-                                    onClick={() => onSelectAsset?.(asset)}
-                                    style={{
-                                        background: 'rgba(5, 5, 16, 0.3)',
-                                        borderRadius: '16px',
-                                        overflow: 'hidden',
-                                        border: '1px solid rgba(255, 255, 255, 0.05)',
-                                        position: 'relative',
-                                        cursor: onSelectAsset ? 'pointer' : 'default'
-                                    }}
+                                    layout
+                                    initial={{ opacity: 0, scale: 0.9 }}
+                                    animate={{ opacity: 1, scale: 1 }}
+                                    exit={{ opacity: 0, scale: 0.9 }}
+                                    className="group relative aspect-video bg-panel-solid border border-main rounded-sm overflow-hidden"
                                 >
-                                    <div style={{ width: '100%', aspectRatio: '16/9', overflow: 'hidden', position: 'relative' }}>
-                                        {asset.type === 'video' ? (
-                                            <video
-                                                src={asset.url}
-                                                autoPlay
-                                                muted
-                                                loop
-                                                playsInline
-                                                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                                            />
-                                        ) : (
-                                            <img
-                                                src={asset.url}
-                                                alt={asset.prompt}
-                                                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                                            />
-                                        )}
-                                        <div style={{
-                                            position: 'absolute',
-                                            top: '12px',
-                                            right: '12px',
-                                            display: 'flex',
-                                            gap: '8px'
-                                        }}>
-                                            <button style={{
-                                                padding: '8px',
-                                                background: 'rgba(0, 0, 0, 0.6)',
-                                                border: 'none',
-                                                borderRadius: '50%',
-                                                color: 'white',
-                                                cursor: 'pointer'
-                                            }}>
-                                                <Download size={16} />
+                                    {asset.type === 'image' ? (
+                                        <img src={asset.url} alt={asset.prompt} className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500" />
+                                    ) : (
+                                        <video src={asset.url} autoPlay loop muted className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500" />
+                                    )}
+                                    
+                                    <div className="absolute inset-0 bg-gradient-to-t from-bg-deep/90 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity p-4 flex flex-col justify-end">
+                                        <p className="text-[10px] tech-text text-header mb-2 line-clamp-1">{asset.prompt}</p>
+                                        <div className="flex gap-2">
+                                            <button 
+                                                onClick={() => onSelectAsset?.(asset)}
+                                                className="btn-cyber text-[8px] py-1 px-3 flex-1"
+                                            >
+                                                Select
                                             </button>
+                                            <a 
+                                                href={asset.url} 
+                                                download 
+                                                className="p-2 bg-panel-solid border border-main text-text-dim hover:text-primary transition-colors"
+                                            >
+                                                <Download size={14} />
+                                            </a>
                                         </div>
                                     </div>
-                                    <div style={{ padding: '16px' }}>
-                                        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
-                                            <span style={{
-                                                fontSize: '0.75rem',
-                                                textTransform: 'uppercase',
-                                                letterSpacing: '1px',
-                                                color: asset.type === 'image' ? '#00deff' : '#ff00cc'
-                                            }}>
-                                                {asset.type}
-                                            </span>
-                                            <span style={{ fontSize: '0.75rem', color: '#82a8b0' }}>
-                                                {new Date(asset.createdAt).toLocaleDateString()}
-                                            </span>
-                                        </div>
-                                        <p style={{
-                                            fontSize: '0.875rem',
-                                            color: 'white',
-                                            lineHeight: '1.4',
-                                            display: '-webkit-box',
-                                            WebkitLineClamp: 2,
-                                            WebkitBoxOrient: 'vertical',
-                                            overflow: 'hidden'
-                                        }}>
-                                            {asset.prompt}
-                                        </p>
+                                    
+                                    <div className="absolute top-2 right-2 px-1.5 py-0.5 bg-bg-deep/80 border border-primary/30 rounded-sm">
+                                        <span className="text-[8px] tech-text text-primary lowercase">{asset.type}</span>
                                     </div>
                                 </motion.div>
                             ))}
                         </AnimatePresence>
                     </div>
                 )}
-            </section>
+            </div>
         </div>
     );
 };

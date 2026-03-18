@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { Zap, Activity } from 'lucide-react';
+import { Zap, Monitor } from 'lucide-react';
 
 interface VisualizerProps {
   isActive?: boolean;
@@ -9,23 +9,28 @@ interface VisualizerProps {
   };
 }
 
-const Visualizer = ({ isActive = false, backgroundAsset }: VisualizerProps) => {
+export const Visualizer = ({ isActive = false, backgroundAsset }: VisualizerProps) => {
   const isVideo = backgroundAsset?.type === 'video';
 
   return (
-    <div className="visualizer-container glass-box overflow-hidden">
-      <div className="viz-header">
-        <Activity size={16} className="glow-purple" />
-        <span className="logo-sub">
-          {backgroundAsset ? `FEED: ${backgroundAsset.type.toUpperCase()} ACTIVE` : 'REAL-TIME VISUAL FEED'}
-        </span>
-        <Zap size={16} className={isActive ? 'glow-blue pulse' : 'glow-blue'} />
-      </div>
+    <div className="glass-panel h-[400px] flex flex-col overflow-hidden font-sans group">
+      <header className="p-4 border-b border-main flex items-center justify-between bg-panel-solid/50">
+        <div className="flex items-center gap-3">
+          <Monitor size={16} className="text-secondary" />
+          <span className="tech-text text-[10px] tracking-[0.2em] text-header">
+            {backgroundAsset ? `FEED: ${backgroundAsset.type.toUpperCase()}_SYNC` : 'NEURAL_VISUAL_FEED'}
+          </span>
+        </div>
+        <div className="flex items-center gap-2">
+            <span className={`w-1 h-4 ${isActive ? 'bg-primary animate-pulse' : 'bg-text-dim/20'}`} />
+            <Zap size={14} className={isActive ? 'text-primary' : 'text-text-dim/30'} />
+        </div>
+      </header>
 
-      <div className="viz-content">
-        {/* Dynamic Background Asset */}
+      <div className="flex-1 relative bg-deep">
+        {/* Dynamic Background Asset with Glitch Overlay */}
         {backgroundAsset && (
-          <div className="viz-background">
+          <div className="absolute inset-0 z-0">
             {isVideo ? (
               <video
                 src={backgroundAsset.url}
@@ -33,33 +38,42 @@ const Visualizer = ({ isActive = false, backgroundAsset }: VisualizerProps) => {
                 muted
                 loop
                 playsInline
-                style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: 0.6 }}
+                className="w-full h-full object-cover opacity-60 grayscale group-hover:grayscale-0 transition-all duration-700"
               />
             ) : (
               <img
                 src={backgroundAsset.url}
-                alt="Visualizer Background"
-                style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: 0.6 }}
+                alt="Feed"
+                className="w-full h-full object-cover opacity-60 grayscale group-hover:grayscale-0 transition-all duration-700"
               />
             )}
+            <div className="absolute inset-0 bg-gradient-to-b from-transparent via-bg-deep/20 to-bg-deep" />
           </div>
         )}
 
-        {/* Plasma Background (Fallback/Overlay) */}
-        <div className={`plasma-aura ${isActive ? 'active' : ''} ${backgroundAsset ? 'dimmed' : ''}`} />
+        {/* CSS-only Plasma Effect if no asset */}
+        {!backgroundAsset && (
+          <div className={`absolute inset-0 opacity-20 pointer-events-none transition-opacity duration-1000 ${isActive ? 'opacity-40' : 'opacity-10'}`}>
+             <div className="absolute inset-0 bg-gradient-to-br from-primary via-secondary to-accent animate-pulse blur-[100px]" />
+          </div>
+        )}
 
-        {/* Frequency Bars */}
-        <div className="frequency-display">
-          {[...Array(32)].map((_, i) => (
+        {/* Frequency Visualization */}
+        <div className="absolute bottom-0 left-0 right-0 h-32 flex items-end justify-center gap-[2px] px-8 z-10">
+          {[...Array(64)].map((_, i) => (
             <motion.div
               key={i}
-              className="freq-bar"
+              className="flex-1 bg-primary/40 border-t border-primary/60"
               animate={isActive ? {
-                height: [20, Math.random() * 80 + 20, 20],
-                opacity: [0.3, 0.8, 0.3]
-              } : { height: 4 }}
+                height: [4, Math.random() * 80 + 20, 4],
+                backgroundColor: [
+                    'rgba(0, 240, 255, 0.4)',
+                    i % 8 === 0 ? 'rgba(255, 0, 255, 0.6)' : 'rgba(0, 240, 255, 0.4)',
+                    'rgba(0, 240, 255, 0.4)'
+                ]
+              } : { height: 2 }}
               transition={{
-                duration: 0.5 + Math.random(),
+                duration: 0.3 + Math.random() * 0.7,
                 repeat: Infinity,
                 ease: "easeInOut"
               }}
@@ -67,154 +81,27 @@ const Visualizer = ({ isActive = false, backgroundAsset }: VisualizerProps) => {
           ))}
         </div>
 
-        {/* Floating Geometric Particles */}
-        {isActive && [...Array(10)].map((_, i) => (
-          <motion.div
-            key={`p-${i}`}
-            className="viz-particle"
-            initial={{ x: '50%', y: '50%', opacity: 0 }}
-            animate={{
-              x: `${Math.random() * 100}%`,
-              y: `${Math.random() * 100}%`,
-              opacity: [0, 0.5, 0],
-              scale: [0.5, 1.5, 0.5]
-            }}
-            transition={{
-              duration: 3 + Math.random() * 4,
-              repeat: Infinity,
-              ease: "linear"
-            }}
-          />
-        ))}
+        {/* Abstract Overlays */}
+        <div className="absolute inset-0 pointer-events-none z-20">
+          <div className="absolute top-4 left-4 tech-text text-[8px] opacity-30 select-none">
+            SYNC_LAYER: 0x4F2A<br />
+            RESOLUTION: 1920x1080<br />
+            ENCODING: NEURAL_RAW
+          </div>
+          
+          <div className="absolute bottom-4 right-4 flex gap-1">
+             {[...Array(4)].map((_, i) => (
+                 <div key={i} className={`w-8 h-1 ${isActive ? 'bg-primary' : 'bg-text-dim/20'} animate-pulse`} style={{ animationDelay: `${i * 0.2}s` }} />
+             ))}
+          </div>
+        </div>
 
-        <div className="viz-overlay">
-          <div className="scanline" />
-          <div className="vignette" />
+        {/* CRT Artifacts */}
+        <div className="absolute inset-0 pointer-events-none z-30 overflow-hidden">
+            <div className="absolute inset-0 scanline-effect opacity-50" />
+            <div className="absolute inset-0 bg-[radial-gradient(circle,transparent_50%,rgba(0,0,0,0.5)_100%)]" />
         </div>
       </div>
-
-      <style>{`
-        .visualizer-container {
-          height: 400px;
-          display: flex;
-          flex-direction: column;
-          position: relative;
-        }
-
-        .viz-header {
-          padding: 12px 20px;
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          background: rgba(0, 0, 0, 0.3);
-          border-bottom: 1px solid var(--glass-border);
-          z-index: 10;
-        }
-
-        .viz-content {
-          flex: 1;
-          position: relative;
-          background: #000;
-          display: flex;
-          align-items: flex-end;
-          padding: 20px;
-          overflow: hidden;
-        }
-
-        .viz-background {
-          position: absolute;
-          inset: 0;
-          z-index: 1;
-        }
-
-        .plasma-aura {
-          position: absolute;
-          inset: 0;
-          background: radial-gradient(circle at 50% 50%, 
-            var(--purple-main) 0%, 
-            var(--magenta-main) 30%, 
-            var(--blue-main) 60%, 
-            transparent 100%
-          );
-          filter: blur(80px);
-          opacity: 0.1;
-          transition: opacity 1s ease;
-          z-index: 2;
-        }
-
-        .plasma-aura.dimmed {
-          opacity: 0.05;
-        }
-
-        .plasma-aura.active {
-          opacity: 0.4;
-          animation: drift 10s infinite alternate;
-        }
-
-        .frequency-display {
-          width: 100%;
-          height: 120px;
-          display: flex;
-          align-items: flex-end;
-          gap: 4px;
-          z-index: 5;
-        }
-
-        .freq-bar {
-          flex: 1;
-          background: linear-gradient(to top, var(--blue-main), var(--purple-main));
-          border-radius: 2px 2px 0 0;
-          min-height: 4px;
-          box-shadow: 0 0 10px rgba(0, 222, 255, 0.3);
-        }
-
-        .viz-particle {
-          position: absolute;
-          width: 4px;
-          height: 4px;
-          background: white;
-          border-radius: 50%;
-          box-shadow: 0 0 10px white;
-          z-index: 4;
-        }
-
-        .viz-overlay {
-          position: absolute;
-          inset: 0;
-          pointer-events: none;
-          z-index: 20;
-        }
-
-        .scanline {
-          position: absolute;
-          inset: 0;
-          background: linear-gradient(
-            to bottom,
-            transparent 50%,
-            rgba(0, 0, 0, 0.1) 51%,
-            transparent 52%
-          );
-          background-size: 100% 4px;
-        }
-
-        .vignette {
-          position: absolute;
-          inset: 0;
-          box-shadow: inset 0 0 100px rgba(0,0,0,0.8);
-        }
-
-        @keyframes drift {
-          0% { transform: scale(1) translate(0, 0); }
-          100% { transform: scale(1.2) translate(10px, 10px); }
-        }
-
-        @media (max-width: 600px) {
-          .visualizer-container { height: 300px; }
-          .frequency-display { gap: 2px; }
-        }
-      `}</style>
     </div>
   );
 };
-
-export default Visualizer;

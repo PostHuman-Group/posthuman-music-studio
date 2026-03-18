@@ -1,24 +1,46 @@
 import { Handler } from '@netlify/functions';
 import { db } from '../../src/db';
 import { schedules } from '../../src/db/schema';
-import { desc } from 'drizzle-orm';
+import { desc, count } from 'drizzle-orm';
 
-export const handler: Handler = async (event, context) => {
+export const handler: Handler = async (event) => {
+    if (event.httpMethod !== 'GET') {
+        return { 
+            statusCode: 405, 
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ error: 'Method Not Allowed' }) 
+        };
+    }
+
     try {
-        const allSchedules = await db.select().from(schedules).orderBy(desc(schedules.startTime));
+        const [allSchedules, total] = await Promise.all([
+            db.select().from(schedules).orderBy(desc(schedules.startTime)),
+            db.select({ value: count() }).from(schedules)
+        ]);
 
         return {
             statusCode: 200,
-            headers: {
+            headers: { 
                 'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*',
+                'Access-Control-Allow-Headers': 'Content-Type',
             },
-            body: JSON.stringify(allSchedules),
+            body: JSON.stringify({ 
+                data: allSchedules, 
+                meta: { total: total[0].value, timestamp: new Date().toISOString() } 
+            }),
         };
-    } catch (error) {
-        console.error('Error fetching schedules:', error);
+    } catch (error: unknown) {
+        const err = error as Error;
+        console.error('[get-schedules] Critical Error:', err);
         return {
             statusCode: 500,
-            body: JSON.stringify({ error: 'Failed to fetch schedules' }),
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ 
+                error: 'Internal Server Error', 
+                message: err.message,
+                traceId: event.headers['x-nf-request-id'] || 'unknown'
+            }),
         };
     }
 };

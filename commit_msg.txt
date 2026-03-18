@@ -1,6 +1,0 @@
-feat(audio): implement real sample persistence and fix delete functionality
-
-- Added sampleGenerationFlow to Genkit with Neon DB sync.
-- Created get-samples and delete-sample Netlify functions.
-- Updated SampleLibrary UI to connect to live backend.
-- Resolved delete button event handler bug and added loading states.

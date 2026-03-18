@@ -1,0 +1,267 @@
+
+> posthuman-music@0.0.0 lint
+> eslint .
+
+
+A:\Google Antigravity Workspaces\PostHuman Group\PostHuman Music\.netlify\edge-functions\prerender_prerender.ts
+    2:1   error  Unexpected var, use let or const instead  no-var
+  124:1   error  Unexpected var, use let or const instead  no-var
+  149:1   error  Unexpected var, use let or const instead  no-var
+  150:1   error  Unexpected var, use let or const instead  no-var
+  172:1   error  Unexpected var, use let or const instead  no-var
+  173:1   error  Unexpected var, use let or const instead  no-var
+  174:1   error  Unexpected var, use let or const instead  no-var
+  175:1   error  Unexpected var, use let or const instead  no-var
+  250:1   error  Unexpected var, use let or const instead  no-var
+  250:41  error  '_context' is defined but never used      @typescript-eslint/no-unused-vars
+  301:1   error  Unexpected var, use let or const instead  no-var
+
+A:\Google Antigravity Workspaces\PostHuman Group\PostHuman Music\agents\skills\frontend-testing\assets\component-test.template.tsx
+  19:10  error  'render' is defined but never used     @typescript-eslint/no-unused-vars
+  19:18  error  'screen' is defined but never used     @typescript-eslint/no-unused-vars
+  19:26  error  'fireEvent' is defined but never used  @typescript-eslint/no-unused-vars
+  19:37  error  'waitFor' is defined but never used    @typescript-eslint/no-unused-vars
+  20:8   error  'userEvent' is defined but never used  @typescript-eslint/no-unused-vars
+
+A:\Google Antigravity Workspaces\PostHuman Group\PostHuman Music\agents\skills\frontend-testing\assets\hook-test.template.ts
+  10:10  error  'renderHook' is defined but never used  @typescript-eslint/no-unused-vars
+  10:22  error  'act' is defined but never used         @typescript-eslint/no-unused-vars
+  10:27  error  'waitFor' is defined but never used     @typescript-eslint/no-unused-vars
+
+A:\Google Antigravity Workspaces\PostHuman Group\PostHuman Music\agents\skills\frontend-testing\assets\utility-test.template.ts
+  39:42  error  'input' is defined but never used     @typescript-eslint/no-unused-vars
+  39:49  error  'expected' is defined but never used  @typescript-eslint/no-unused-vars
+
+A:\Google Antigravity Workspaces\PostHuman Group\PostHuman Music\agents\skills\react-native-agent-skills-main\react-native-agent-skills-main\packages\react-best-practices-build\src\build.ts
+    8:10  error  'Rule' is defined but never used                @typescript-eslint/no-unused-vars
+    8:25  error  'GuidelinesDocument' is defined but never used  @typescript-eslint/no-unused-vars
+  226:12  error  'error' is defined but never used               @typescript-eslint/no-unused-vars
+
+A:\Google Antigravity Workspaces\PostHuman Group\PostHuman Music\agents\skills\react-native-agent-skills-main\react-native-agent-skills-main\packages\react-best-practices-build\src\extract-tests.ts
+  18:35  error  'index' is defined but never used  @typescript-eslint/no-unused-vars
+
+A:\Google Antigravity Workspaces\PostHuman Group\PostHuman Music\agents\skills\react-native-agent-skills-main\react-native-agent-skills-main\packages\react-best-practices-build\src\migrate.ts
+   76:9   error  'inCodeBlock' is never reassigned. Use 'const' instead   prefer-const
+   76:9   error  'inCodeBlock' is assigned a value but never used         @typescript-eslint/no-unused-vars
+  110:13  error  'introduction' is never reassigned. Use 'const' instead  prefer-const
+
+A:\Google Antigravity Workspaces\PostHuman Group\PostHuman Music\agents\skills\react-native-agent-skills-main\react-native-agent-skills-main\packages\react-best-practices-build\src\parser.ts
+  25:9   error  'lines' is assigned a value but never used              @typescript-eslint/no-unused-vars
+  28:7   error  'frontmatter' is never reassigned. Use 'const' instead  prefer-const
+  28:35  error  Unexpected any. Specify a different type                @typescript-eslint/no-explicit-any
+  65:7   error  'examples' is never reassigned. Use 'const' instead     prefer-const
+  66:7   error  'references' is never reassigned. Use 'const' instead   prefer-const
+
+A:\Google Antigravity Workspaces\PostHuman Group\PostHuman Music\agents\skills\react-next-1-agent-skills-main\packages\react-best-practices-build\src\build.ts
+    8:10  error  'Rule' is defined but never used                @typescript-eslint/no-unused-vars
+    8:25  error  'GuidelinesDocument' is defined but never used  @typescript-eslint/no-unused-vars
+  226:12  error  'error' is defined but never used               @typescript-eslint/no-unused-vars
+
+A:\Google Antigravity Workspaces\PostHuman Group\PostHuman Music\agents\skills\react-next-1-agent-skills-main\packages\react-best-practices-build\src\extract-tests.ts
+  18:35  error  'index' is defined but never used  @typescript-eslint/no-unused-vars
+
+A:\Google Antigravity Workspaces\PostHuman Group\PostHuman Music\agents\skills\react-next-1-agent-skills-main\packages\react-best-practices-build\src\migrate.ts
+   76:9   error  'inCodeBlock' is never reassigned. Use 'const' instead   prefer-const
+   76:9   error  'inCodeBlock' is assigned a value but never used         @typescript-eslint/no-unused-vars
+  110:13  error  'introduction' is never reassigned. Use 'const' instead  prefer-const
+
+A:\Google Antigravity Workspaces\PostHuman Group\PostHuman Music\agents\skills\react-next-1-agent-skills-main\packages\react-best-practices-build\src\parser.ts
+  25:9   error  'lines' is assigned a value but never used              @typescript-eslint/no-unused-vars
+  28:7   error  'frontmatter' is never reassigned. Use 'const' instead  prefer-const
+  28:35  error  Unexpected any. Specify a different type                @typescript-eslint/no-explicit-any
+  65:7   error  'examples' is never reassigned. Use 'const' instead     prefer-const
+  66:7   error  'references' is never reassigned. Use 'const' instead   prefer-const
+
+A:\Google Antigravity Workspaces\PostHuman Group\PostHuman Music\agents\skills\react-next-2-agent-skills-main\packages\react-best-practices-build\src\build.ts
+    8:10  error  'Rule' is defined but never used                @typescript-eslint/no-unused-vars
+    8:25  error  'GuidelinesDocument' is defined but never used  @typescript-eslint/no-unused-vars
+  226:12  error  'error' is defined but never used               @typescript-eslint/no-unused-vars
+
+A:\Google Antigravity Workspaces\PostHuman Group\PostHuman Music\agents\skills\react-next-2-agent-skills-main\packages\react-best-practices-build\src\extract-tests.ts
+  18:35  error  'index' is defined but never used  @typescript-eslint/no-unused-vars
+
+A:\Google Antigravity Workspaces\PostHuman Group\PostHuman Music\agents\skills\react-next-2-agent-skills-main\packages\react-best-practices-build\src\migrate.ts
+   76:9   error  'inCodeBlock' is never reassigned. Use 'const' instead   prefer-const
+   76:9   error  'inCodeBlock' is assigned a value but never used         @typescript-eslint/no-unused-vars
+  110:13  error  'introduction' is never reassigned. Use 'const' instead  prefer-const
+
+A:\Google Antigravity Workspaces\PostHuman Group\PostHuman Music\agents\skills\react-next-2-agent-skills-main\packages\react-best-practices-build\src\parser.ts
+  25:9   error  'lines' is assigned a value but never used              @typescript-eslint/no-unused-vars
+  28:7   error  'frontmatter' is never reassigned. Use 'const' instead  prefer-const
+  28:35  error  Unexpected any. Specify a different type                @typescript-eslint/no-explicit-any
+  65:7   error  'examples' is never reassigned. Use 'const' instead     prefer-const
+  66:7   error  'references' is never reassigned. Use 'const' instead   prefer-const
+
+A:\Google Antigravity Workspaces\PostHuman Group\PostHuman Music\agents\skills\react-next-3-agent-skills-main\packages\react-best-practices-build\src\build.ts
+    8:10  error  'Rule' is defined but never used                @typescript-eslint/no-unused-vars
+    8:25  error  'GuidelinesDocument' is defined but never used  @typescript-eslint/no-unused-vars
+  226:12  error  'error' is defined but never used               @typescript-eslint/no-unused-vars
+
+A:\Google Antigravity Workspaces\PostHuman Group\PostHuman Music\agents\skills\react-next-3-agent-skills-main\packages\react-best-practices-build\src\extract-tests.ts
+  18:35  error  'index' is defined but never used  @typescript-eslint/no-unused-vars
+
+A:\Google Antigravity Workspaces\PostHuman Group\PostHuman Music\agents\skills\react-next-3-agent-skills-main\packages\react-best-practices-build\src\migrate.ts
+   76:9   error  'inCodeBlock' is never reassigned. Use 'const' instead   prefer-const
+   76:9   error  'inCodeBlock' is assigned a value but never used         @typescript-eslint/no-unused-vars
+  110:13  error  'introduction' is never reassigned. Use 'const' instead  prefer-const
+
+A:\Google Antigravity Workspaces\PostHuman Group\PostHuman Music\agents\skills\react-next-3-agent-skills-main\packages\react-best-practices-build\src\parser.ts
+  25:9   error  'lines' is assigned a value but never used              @typescript-eslint/no-unused-vars
+  28:7   error  'frontmatter' is never reassigned. Use 'const' instead  prefer-const
+  28:35  error  Unexpected any. Specify a different type                @typescript-eslint/no-explicit-any
+  65:7   error  'examples' is never reassigned. Use 'const' instead     prefer-const
+  66:7   error  'references' is never reassigned. Use 'const' instead   prefer-const
+
+A:\Google Antigravity Workspaces\PostHuman Group\PostHuman Music\netlify\functions\generate-stream-metadata.ts
+  29:14  error  'error' is defined but never used  @typescript-eslint/no-unused-vars
+
+A:\Google Antigravity Workspaces\PostHuman Group\PostHuman Music\netlify\functions\hello.ts
+  3:40  error  'event' is defined but never used    @typescript-eslint/no-unused-vars
+  3:47  error  'context' is defined but never used  @typescript-eslint/no-unused-vars
+
+A:\Google Antigravity Workspaces\PostHuman Group\PostHuman Music\netlify\functions\update-stream-state.ts
+  19:27  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+A:\Google Antigravity Workspaces\PostHuman Group\PostHuman Music\src\App.tsx
+  82:55  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+A:\Google Antigravity Workspaces\PostHuman Group\PostHuman Music\src\components\BroadcastStudio.tsx
+  2:18  error  'AnimatePresence' is defined but never used  @typescript-eslint/no-unused-vars
+  7:40  error  Unexpected any. Specify a different type     @typescript-eslint/no-explicit-any
+
+A:\Google Antigravity Workspaces\PostHuman Group\PostHuman Music\src\components\ChatStudio.tsx
+  10:3   error  'CheckCircle2' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              @typescript-eslint/no-unused-vars
+  12:3   error  'ChevronRight' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              @typescript-eslint/no-unused-vars
+  15:3   error  'Activity' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  @typescript-eslint/no-unused-vars
+  26:14  error  Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              @typescript-eslint/no-explicit-any
+  67:11  error  Error: Cannot call impure function during render
+
+`Date.now` is an impure function. Calling an impure function can produce unstable results that update unpredictably when the component happens to re-render. (https://react.dev/reference/rules/components-and-hooks-must-be-pure#components-and-hooks-must-be-idempotent).
+
+A:\Google Antigravity Workspaces\PostHuman Group\PostHuman Music\src\components\ChatStudio.tsx:67:11
+  65 |
+  66 |     const userMsg: Message = {
+> 67 |       id: Date.now().toString(),
+     |           ^^^^^^^^^^ Cannot call impure function
+  68 |       role: 'user',
+  69 |       content: text
+  70 |     };  react-hooks/purity
+
+A:\Google Antigravity Workspaces\PostHuman Group\PostHuman Music\src\components\SampleLibrary.tsx
+  33:38  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+A:\Google Antigravity Workspaces\PostHuman Group\PostHuman Music\src\components\Scheduler.tsx
+  7:9  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+A:\Google Antigravity Workspaces\PostHuman Group\PostHuman Music\src\components\StreamBroadcaster.tsx
+  15:52  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  29:61  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  46:35  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  53:23  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+A:\Google Antigravity Workspaces\PostHuman Group\PostHuman Music\src\components\StreamEngine.tsx
+  3:60  error  'Activity' is defined but never used  @typescript-eslint/no-unused-vars
+
+A:\Google Antigravity Workspaces\PostHuman Group\PostHuman Music\src\components\Visualizer.tsx
+  68:29  error  Error: Cannot call impure function during render
+
+`Math.random` is an impure function. Calling an impure function can produce unstable results that update unpredictably when the component happens to re-render. (https://react.dev/reference/rules/components-and-hooks-must-be-pure#components-and-hooks-must-be-idempotent).
+
+A:\Google Antigravity Workspaces\PostHuman Group\PostHuman Music\src\components\Visualizer.tsx:68:29
+  66 |               className="flex-1 bg-primary/40 border-t border-primary/60"
+  67 |               animate={isActive ? {
+> 68 |                 height: [4, Math.random() * 80 + 20, 4],
+     |                             ^^^^^^^^^^^^^ Cannot call impure function
+  69 |                 backgroundColor: [
+  70 |                     'rgba(0, 240, 255, 0.4)',
+  71 |                     i % 8 === 0 ? 'rgba(255, 0, 255, 0.6)' : 'rgba(0, 240, 255, 0.4)',  react-hooks/purity
+  76:33  error  Error: Cannot call impure function during render
+
+`Math.random` is an impure function. Calling an impure function can produce unstable results that update unpredictably when the component happens to re-render. (https://react.dev/reference/rules/components-and-hooks-must-be-pure#components-and-hooks-must-be-idempotent).
+
+A:\Google Antigravity Workspaces\PostHuman Group\PostHuman Music\src\components\Visualizer.tsx:76:33
+  74 |               } : { height: 2 }}
+  75 |               transition={{
+> 76 |                 duration: 0.3 + Math.random() * 0.7,
+     |                                 ^^^^^^^^^^^^^ Cannot call impure function
+  77 |                 repeat: Infinity,
+  78 |                 ease: "easeInOut"
+  79 |               }}                                                                                                                                      react-hooks/purity
+
+A:\Google Antigravity Workspaces\PostHuman Group\PostHuman Music\src\lib\genkit-flows.ts
+  31:58  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  35:15  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  59:15  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  68:15  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+A:\Google Antigravity Workspaces\PostHuman Group\PostHuman Music\src\modules\Stream\BridgeScheduler.tsx
+   2:38  error  'Globe' is defined but never used         @typescript-eslint/no-unused-vars
+  12:9   error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+A:\Google Antigravity Workspaces\PostHuman Group\PostHuman Music\src\modules\Stream\BroadcastEngine.tsx
+  19:52  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            @typescript-eslint/no-explicit-any
+  32:61  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            @typescript-eslint/no-explicit-any
+  49:35  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            @typescript-eslint/no-explicit-any
+  51:17  error    Error: Cannot access variable before it is declared
+
+`handleIngestFailure` is accessed before it is declared, which prevents the earlier access from updating when this value changes over time.
+
+A:\Google Antigravity Workspaces\PostHuman Group\PostHuman Music\src\modules\Stream\BroadcastEngine.tsx:51:17
+  49 |             kit.on('error', (err: any) => {
+  50 |                 console.error('OvenLiveKit error:', err);
+> 51 |                 handleIngestFailure(err.message || 'Streaming failed');
+     |                 ^^^^^^^^^^^^^^^^^^^ `handleIngestFailure` accessed before it is declared
+  52 |             });
+  53 |
+  54 |         } catch (err: any) {
+
+A:\Google Antigravity Workspaces\PostHuman Group\PostHuman Music\src\modules\Stream\BroadcastEngine.tsx:60:5
+  58 |     }, [ovenUrl]);
+  59 |
+> 60 |     const handleIngestFailure = useCallback((errorMsg: string) => {
+     |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 61 |         setError(errorMsg);
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 62 |         setStatus('fallback');
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 63 |         
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 64 |         // TODO: Silently trigger OBS Fallback logic
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 65 |         console.warn('OME Ingest Failed. Initializing Silent OBS Fallback...');
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 66 |         
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 67 |         // For MVP, we'll just set the status to fallback and notify the user (silently in real production)
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 68 |         setIsStreaming(false);
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 69 |     }, []);
+     | ^^^^^^^^^^^^ `handleIngestFailure` is declared here
+  70 |
+  71 |     const stopStreaming = useCallback(() => {
+  72 |         if (broadcaster) {  react-hooks/immutability
+  54:23  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            @typescript-eslint/no-explicit-any
+  58:8   warning  React Hook useCallback has a missing dependency: 'handleIngestFailure'. Either include it or remove the dependency array                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            react-hooks/exhaustive-deps
+
+A:\Google Antigravity Workspaces\PostHuman Group\PostHuman Music\src\modules\Stream\CleanFeed.tsx
+   2:18  error  'AnimatePresence' is defined but never used  @typescript-eslint/no-unused-vars
+  13:40  error  Unexpected any. Specify a different type     @typescript-eslint/no-explicit-any
+
+A:\Google Antigravity Workspaces\PostHuman Group\PostHuman Music\src\modules\Stream\ControlHub.tsx
+   1:31  error  'useRef' is defined but never used                    @typescript-eslint/no-unused-vars
+   2:10  error  'motion' is defined but never used                    @typescript-eslint/no-unused-vars
+   3:10  error  'Play' is defined but never used                      @typescript-eslint/no-unused-vars
+   3:16  error  'Pause' is defined but never used                     @typescript-eslint/no-unused-vars
+  11:25  error  'setIsStreaming' is assigned a value but never used   @typescript-eslint/no-unused-vars
+  12:26  error  'setStreamHealth' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  14:24  error  'setWatchHours' is assigned a value but never used    @typescript-eslint/no-unused-vars
+  15:12  error  'isSyncing' is assigned a value but never used        @typescript-eslint/no-unused-vars
+  15:23  error  'setIsSyncing' is assigned a value but never used     @typescript-eslint/no-unused-vars
+
+A:\Google Antigravity Workspaces\PostHuman Group\PostHuman Music\src\types\ovenlivekit.d.ts
+  2:24  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+✖ 114 problems (113 errors, 1 warning)
+  29 errors and 0 warnings potentially fixable with the `--fix` option.
+
